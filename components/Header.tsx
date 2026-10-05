@@ -106,6 +106,7 @@ export default function Header({
                     <div className="max-h-60 overflow-y-auto">
                       <Link
                         href="/app"
+                        prefetch={true}
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2 px-3.5 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium"
                       >
@@ -115,6 +116,7 @@ export default function Header({
                         <Link
                           key={v.id}
                           href={`/app/vehicles/${v.id}`}
+                          prefetch={true}
                           onClick={() => setDropdownOpen(false)}
                           className={`flex items-center justify-between px-3.5 py-2.5 text-sm hover:bg-slate-50 transition-colors ${
                             v.id === currentId ? "font-bold text-blue-600 bg-blue-50/70" : "text-slate-700"
@@ -132,6 +134,7 @@ export default function Header({
                     <div className="border-t border-slate-100 mt-1 pt-1">
                       <Link
                         href="/app/vehicles/new"
+                        prefetch={true}
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors"
                       >

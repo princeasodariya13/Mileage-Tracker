@@ -126,6 +126,7 @@ export default function VehiclesList({ vehicles }: VehiclesListProps) {
               <Link
                 key={v.id}
                 href={`/app/vehicles/${v.id}`}
+                prefetch={true}
                 className="p-4 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors block"
                 style={{ textDecoration: "none" }}
               >

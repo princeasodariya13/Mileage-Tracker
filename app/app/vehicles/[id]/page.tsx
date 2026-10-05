@@ -14,9 +14,11 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
   const vid = oid(params.id);
   if (!vid) notFound();
   const d = await db();
-  const v = await d.collection("vehicles").findOne({ _id: vid, userId: user._id });
+  const [v, raw] = await Promise.all([
+    d.collection("vehicles").findOne({ _id: vid, userId: user._id }),
+    d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray(),
+  ]);
   if (!v) notFound();
-  const raw = await d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray();
   const entries = sortEntries(raw.map(toEntry));
   const r = computeMileage(v as any, entries);
   const segByEnd = new Map(r.segments.map((s) => [s.endId, s]));
@@ -76,6 +78,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
             <div className="grid grid-cols-2 gap-2 w-full">
               <Link
                 href={`/app/vehicles/${params.id}/add-fuel`}
+                prefetch={true}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-sm text-center"
                 style={{ textDecoration: "none" }}
               >
@@ -87,6 +90,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
 
               <Link
                 href={`/app/vehicles/${params.id}/analytics`}
+                prefetch={true}
                 className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors shadow-2xs text-center"
                 style={{ textDecoration: "none" }}
               >

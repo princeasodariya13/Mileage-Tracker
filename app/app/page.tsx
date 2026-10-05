@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getVehiclesList } from "@/lib/data";
 import { computeMileage, sortEntries } from "@/lib/mileage";
 import { toEntry } from "@/lib/entries";
 import { inr, km } from "@/lib/format";
@@ -11,8 +12,10 @@ export default async function AppHome() {
   const user = await requireUser();
   const d = await db();
 
-  const vehiclesRaw = await d.collection("vehicles").find({ userId: user._id }).sort({ createdAt: 1 }).toArray();
-  const fuelEntriesRaw = await d.collection("fuelEntries").find({ userId: user._id }).toArray();
+  const [vehiclesRaw, fuelEntriesRaw] = await Promise.all([
+    getVehiclesList(user._id),
+    d.collection("fuelEntries").find({ userId: user._id }).toArray(),
+  ]);
 
   let overallSpendMinor = 0;
   let overallTrackedKm = 0;

@@ -19,10 +19,11 @@ export default async function AnalyticsPage({
   if (!vid) notFound();
 
   const d = await db();
-  const v = await d.collection("vehicles").findOne({ _id: vid, userId: user._id });
+  const [v, raw] = await Promise.all([
+    d.collection("vehicles").findOne({ _id: vid, userId: user._id }),
+    d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray(),
+  ]);
   if (!v) notFound();
-
-  const raw = await d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray();
   const entries = sortEntries(raw.map(toEntry));
   const res = computeMileage(v as any, entries);
 

@@ -2,6 +2,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createHash, randomBytes } from "crypto";
 import { ObjectId } from "mongodb";
+import { cache } from "react";
 import { db } from "./db";
 
 const COOKIE = "session";
@@ -34,14 +35,14 @@ export async function destroySession() {
   cookies().delete(COOKIE);
 }
 
-export async function getUser() {
+export const getUser = cache(async function getUser() {
   const t = cookies().get(COOKIE)?.value;
   if (!t) return null;
   const d = await db();
   const s = await d.collection("sessions").findOne({ tokenHash: sha(t), expiresAt: { $gt: new Date() } });
   if (!s) return null;
   return d.collection("users").findOne({ _id: s.userId });
-}
+});
 
 export async function requireUser() {
   const u = await getUser();
