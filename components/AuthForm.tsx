@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/client";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -78,11 +79,16 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
       <div className={`w-full ${isLogin ? "max-w-sm" : "max-w-md"} my-auto`}>
         {/* App Logo & Title */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#0052cc] text-white shadow-md mb-3">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
+          <div className="inline-flex items-center justify-center mb-3">
+            <div className="w-16 h-16 rounded-2xl bg-white p-1.5 flex items-center justify-center shadow-md border border-slate-200 overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt="Mileage-Tracker Logo"
+                width={60}
+                height={60}
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
           <h1 className="text-2xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
             Mileage-Tracker

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -9,13 +10,17 @@ export default async function Home() {
     <div className="page-wrapper min-h-dvh flex flex-col">
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto w-full">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--accent)" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 22V8l9-6 9 6v14H3z" /><path d="M9 22V12h6v10" />
-            </svg>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-slate-200 overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="Mileage-Tracker Logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-contain"
+            />
           </div>
-          <span className="font-bold text-base tracking-tight" style={{ color: "var(--text-primary)" }}>Mileage-Tracker</span>
+          <span className="font-black text-xl tracking-tight" style={{ color: "var(--text-primary)" }}>Mileage-Tracker</span>
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
