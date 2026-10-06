@@ -60,8 +60,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const price = Number(b.pricePerLitre);
     fuelMl = Math.round(((totalAmountMinor / 100) / price) * 1000);
   } else {
-    // Default petrol price is Rs 110/L for entries where no custom price was entered
-    const defaultPetrolPrice = 110;
+    // Default petrol price is Rs 102/L for entries where no custom price was entered
+    const defaultPetrolPrice = 102;
     fuelMl = Math.round(((totalAmountMinor / 100) / defaultPetrolPrice) * 1000);
   }
 

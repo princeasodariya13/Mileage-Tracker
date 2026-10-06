@@ -23,7 +23,7 @@ export default function CheckMileageModal({
   latestLoggedOdometerKm,
   totalFuelLitres,
   totalSpendMinor,
-  avgPricePerLitre = 110,
+  avgPricePerLitre = 102,
   className = "",
 }: CheckMileageModalProps) {
   const router = useRouter();
@@ -42,8 +42,8 @@ export default function CheckMileageModal({
   const hasEnteredOdo = currentOdo.trim() !== "" && !isNaN(odoNum);
   const distanceTravelled = hasEnteredOdo ? Math.max(0, odoNum - baselineKm) : 0;
 
-  // Total fuel litres: use explicit litres if recorded, or derive from spend using vehicle's average / standard ₹110/L petrol price
-  const effectivePrice = avgPricePerLitre > 0 ? avgPricePerLitre : 110;
+  // Total fuel litres: use explicit litres if recorded, or derive from spend using vehicle's average / standard ₹102/L petrol price
+  const effectivePrice = avgPricePerLitre > 0 ? avgPricePerLitre : 102;
   let effectiveLitres = totalFuelLitres;
   if (effectiveLitres <= 0 && totalSpendMinor > 0) {
     effectiveLitres = (totalSpendMinor / 100) / effectivePrice;
@@ -158,7 +158,7 @@ export default function CheckMileageModal({
                   <div>
                     <span className="text-xs text-slate-600 font-medium block">Total Fuel Used:</span>
                     <span className="text-[10px] text-slate-400">
-                      {avgPricePerLitre ? `(avg ₹${avgPricePerLitre.toFixed(1)}/L)` : "(₹110/L standard)"}
+                      {avgPricePerLitre ? `(avg ₹${avgPricePerLitre.toFixed(1)}/L)` : "(₹102/L standard)"}
                     </span>
                   </div>
                   <span className="text-sm font-black text-slate-900">
@@ -193,7 +193,7 @@ export default function CheckMileageModal({
               <div className="bg-blue-50/60 border border-blue-100 rounded-2xl p-4 text-xs text-slate-600 space-y-1">
                 <p className="font-bold text-[#0052cc]">How this calculation works:</p>
                 <p>
-                  Enter your current odometer reading above to instantly see your vehicle&apos;s true mileage and distance driven since start ({km(baselineKm)}). Uses your submitted petrol prices (or ₹110/L standard petrol price) to compute total fuel.
+                  Enter your current odometer reading above to instantly see your vehicle&apos;s true mileage and distance driven since start ({km(baselineKm)}). Uses your submitted petrol prices (or ₹102/L standard petrol price) to compute total fuel.
                 </p>
               </div>
             )}

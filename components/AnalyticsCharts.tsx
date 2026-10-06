@@ -174,7 +174,7 @@ export default function AnalyticsCharts({ data }: { data: AnalyticsData }) {
   const customDistance = hasValidOdo ? currentOdoNum - baselineKm : data.verifiedKm;
 
   // Effective fuel litres: use recorded totalFuelL or compute from spend using avg petrol price
-  const avgPrice = data.avgPricePerLMinor ? data.avgPricePerLMinor / 100 : 110;
+  const avgPrice = data.avgPricePerLMinor ? data.avgPricePerLMinor / 100 : 102;
   let effectiveLitres = data.totalFuelL;
   if (effectiveLitres <= 0 && data.totalSpendMinor > 0) {
     effectiveLitres = (data.totalSpendMinor / 100) / avgPrice;

@@ -42,13 +42,13 @@ export function computeMileage(v: VehicleInput, input: Entry[]) {
   const minKm = v.minCycleKm ?? 20, minMl = v.minCycleFuelMl ?? 500;
   const [lo, hi] = BOUNDS[v.vehicleType];
 
-  // Default petrol price is Rs 110/L.
+  // Default petrol price is Rs 102/L.
   // Entries with explicit custom price/litres use their own value.
-  // Entries without explicit fuel price strictly use the default Rs 110/L.
-  const DEFAULT_PETROL_PRICE_PER_L = 110;
+  // Entries without explicit fuel price strictly use the default Rs 102/L.
+  const DEFAULT_PETROL_PRICE_PER_L = 102;
 
   // Normalize entries: if user only entered spend without explicit fuelMl,
-  // calculate fuel volume using standard default Rs 110/L for that entry.
+  // calculate fuel volume using standard default Rs 102/L for that entry.
   const normalizedInput = input.map((e) => {
     let fuelMl = e.fuelMl;
     if ((fuelMl == null || fuelMl <= 0) && e.totalAmountMinor != null && e.totalAmountMinor > 0) {
@@ -151,7 +151,7 @@ export function computeMileage(v: VehicleInput, input: Entry[]) {
     totalSpendMinor,
     avgPricePerLMinor: totalRefillFuelMl > 0 && totalSpendMinor > 0
       ? Math.round(totalSpendMinor / (totalRefillFuelMl / 1000))
-      : 11000,
+      : 10200,
     trackedKm: entries.length ? lastTracked - v.initialOdometerKm : 0,
     latestOdometerKm: lastTracked,
     anchorOdometerKm: anchor ? (anchor as { tracked: number }).tracked - offset : null,

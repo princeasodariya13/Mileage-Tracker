@@ -60,7 +60,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (b.pricePerLitre !== "" && b.pricePerLitre != null && Number(b.pricePerLitre) > 0) {
       fuelMl = Math.round(((totalAmountMinor / 100) / Number(b.pricePerLitre)) * 1000);
     } else {
-      const defaultPetrolPrice = 110;
+      const defaultPetrolPrice = 102;
       fuelMl = Math.round(((totalAmountMinor / 100) / defaultPetrolPrice) * 1000);
     }
   }

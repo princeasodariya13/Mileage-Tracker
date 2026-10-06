@@ -40,18 +40,18 @@ near(w.averageKmpl, 16.67);
 const rs = computeMileage(car, [e(99800, 5, null, true, "2027-01-01"), e(150, 10, null, true, "2027-01-02", { odometerReset: { previousFinalKm: 99999, newStartKm: 0 } })]);
 assert.equal(rs.segments[0].distanceKm, 349);
 
-// Petrol price standard default Rs 110/L with entry-specific overrides (User scenario: 200@110, 300@120, 400@110)
+// Petrol price standard default Rs 102/L with entry-specific overrides (User scenario: 200@102, 300@120, 400@102)
 const heroSplendor = { vehicleType: "motorcycle" as const, initialOdometerKm: 1000 };
-// Entry 1: 200 Rs (no price -> 110) -> 200 / 110 * 1000 = 1818 ml (1.818 L)
+// Entry 1: 200 Rs (no price -> 102) -> 200 / 102 * 1000 = 1961 ml (1.961 L)
 // Entry 2: 300 Rs (custom price 120 -> 2.500 L = 2500 ml) -> 2.500 L
-// Entry 3: 400 Rs (no price -> 110) -> 400 / 110 * 1000 = 3636 ml (3.636 L)
+// Entry 3: 400 Rs (no price -> 102) -> 400 / 102 * 1000 = 3922 ml (3.922 L)
 const multiPriceTest = computeMileage(heroSplendor, [
   { id: "e1", entryAt: new Date("2027-04-01"), odometerKm: 1000, fuelMl: null, totalAmountMinor: 20000, fullTank: true, kind: "refill" },
   { id: "e2", entryAt: new Date("2027-04-05"), odometerKm: 1100, fuelMl: 2500, totalAmountMinor: 30000, fullTank: true, kind: "refill" },
   { id: "e3", entryAt: new Date("2027-04-10"), odometerKm: 1300, fuelMl: null, totalAmountMinor: 40000, fullTank: true, kind: "refill" },
 ]);
-// Total fuel volume = 1.818 + 2.500 + 3.636 = 7.954 L
-near(multiPriceTest.totalFuelL, 7.954);
+// Total fuel volume = 1.961 + 2.500 + 3.922 = 8.383 L
+near(multiPriceTest.totalFuelL, 8.383);
 assert.equal(multiPriceTest.totalSpendMinor, 90000); // 900 Rs total
 assert.equal(multiPriceTest.trackedKm, 300); // 1300 - 1000 = 300 km
 

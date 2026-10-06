@@ -232,7 +232,7 @@ export default function AddFuelForm({
                   Fuel Price / Litre (₹)
                 </label>
                 <span className="text-[11px] text-slate-400 font-medium">
-                  Default: ₹110/L
+                  Default: ₹102/L
                 </span>
               </div>
               <input
@@ -240,14 +240,14 @@ export default function AddFuelForm({
                 name="pricePerLitre"
                 inputMode="decimal"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
-                placeholder="e.g. 120 (leave empty to use default ₹110/L)"
+                placeholder="e.g. 105 (leave empty to use default ₹102/L)"
                 value={pricePerLitre}
                 onChange={(e) => setPricePerLitre(e.target.value)}
               />
               <p className="text-[11px] text-slate-500 mt-1">
                 {tot > 0
-                  ? `Calculated fuel for this fill: ~${(tot / (Number(pricePerLitre) || 110)).toFixed(2)} L (at ₹${pricePerLitre || 110}/L)`
-                  : "If left blank, standard ₹110/L is used for this specific fill."}
+                  ? `Calculated fuel for this fill: ~${(tot / (Number(pricePerLitre) || 102)).toFixed(2)} L (at ₹${pricePerLitre || 102}/L)`
+                  : "If left blank, standard ₹102/L is used for this specific fill."}
               </p>
             </div>
 
