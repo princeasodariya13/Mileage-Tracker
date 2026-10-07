@@ -68,9 +68,8 @@ export default function AddFuelForm({
     });
 
     if (ok) {
-      // Automatically redirect to the vehicle details & history page
-      router.push(`/app/vehicles/${vehicleId}`);
-      router.refresh();
+      // Automatically redirect to the vehicle details & history page without keeping form in history
+      window.location.replace(`/app/vehicles/${vehicleId}`);
     } else {
       setBusy(false);
       setError(data?.error || "Something went wrong.");

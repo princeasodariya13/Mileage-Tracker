@@ -56,8 +56,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
     const { ok, data } = await post(`/api/auth/${mode}`, payload);
     if (ok) {
-      router.push("/app");
-      router.refresh();
+      window.location.replace("/app");
     } else {
       setError(data.error || "Authentication failed. Please check your details.");
       setBusy(false);

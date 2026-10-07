@@ -123,7 +123,7 @@ export default function EditFuelForm({
     );
 
     if (ok) {
-      window.location.href = `/app/vehicles/${vehicleId}`;
+      window.location.replace(`/app/vehicles/${vehicleId}`);
     } else {
       setBusy(false);
       setError(data?.error || "Something went wrong.");

@@ -25,8 +25,7 @@ export default function NewVehicleForm() {
       tankIsFullNow: f.get("full") === "yes",
     });
     if (ok) {
-      router.push(`/app/vehicles/${data.id}`);
-      router.refresh();
+      window.location.replace(`/app/vehicles/${data.id}`);
     } else {
       setError(data.error || "Something went wrong.");
       setBusy(false);
