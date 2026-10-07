@@ -9,17 +9,21 @@ export async function GET(req: Request) {
   const state = searchParams.get("state");
   const error = searchParams.get("error");
 
+  const url = new URL(req.url);
   const h = headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
+  const host = h.get("x-forwarded-host") || h.get("host") || url.host;
   const proto = h.get("x-forwarded-proto") || (host.includes("localhost") || host.includes("127.0.0.1") ? "http" : "https");
   
-  // When running locally on localhost, always use local URL; in production use env/live host
-  const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
-  const baseUrl = isLocal
-    ? `http://${host}`
-    : (process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `${proto}://${host}`)).replace(/\/+$/, "");
+  let origin = `${proto}://${host}`;
+  if (host.startsWith("localhost") || host.startsWith("127.0.0.1")) {
+    origin = `http://${host.includes(":") ? host : "localhost:3000"}`;
+    if (host.includes("3000")) origin = "http://localhost:3000";
+  } else if (process.env.NEXT_PUBLIC_APP_URL) {
+    origin = process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
+  }
   
-  const redirectUri = `${baseUrl}/api/auth/google/callback`;
+  const redirectUri = `${origin}/api/auth/google/callback`;
+  const baseUrl = origin;
 
   if (error || !code) {
     return NextResponse.redirect(`${baseUrl}/login?error=Google+sign+in+cancelled`);
