@@ -3,15 +3,16 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import ThemeToggle from "@/components/ThemeToggle";
+import DownloadApkButton from "@/components/DownloadApkButton";
 
 export default async function Home() {
   if (await getUser()) redirect("/app");
   return (
     <div className="page-wrapper min-h-dvh flex flex-col">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-5 max-w-6xl mx-auto w-full">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-slate-200 overflow-hidden">
+      <nav className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 max-w-6xl mx-auto w-full gap-2">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs border border-slate-200 overflow-hidden flex-shrink-0">
             <Image
               src="/logo.png"
               alt="Mileage-Tracker Logo"
@@ -20,12 +21,13 @@ export default async function Home() {
               className="w-full h-full object-contain"
             />
           </div>
-          <span className="font-black text-xl tracking-tight" style={{ color: "var(--text-primary)" }}>Mileage-Tracker</span>
+          <span className="font-black text-lg sm:text-xl tracking-tight" style={{ color: "var(--text-primary)" }}>Mileage-Tracker</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <DownloadApkButton />
           <ThemeToggle />
-          <Link href="/login" className="btn-plain text-sm">Log in</Link>
-          <Link href="/signup" className="btn text-sm">Get started</Link>
+          <Link href="/login" className="btn-plain text-xs sm:text-sm px-2.5 sm:px-3.5 py-1.5 sm:py-2">Log in</Link>
+          <Link href="/signup" className="btn text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">Get started</Link>
         </div>
       </nav>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,14 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get("error");
+    if (err) {
+      setError(decodeURIComponent(err.replace(/\+/g, " ")));
+    }
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -113,9 +121,51 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
             </h2>
             <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>
               {isLogin
-                ? "Enter your email & password to access your garage"
-                : "Fill in your details below to start tracking your vehicle mileage"}
+                ? "Enter your email & password or sign in with Google"
+                : "Sign up below to start tracking your vehicle mileage"}
             </p>
+          </div>
+
+          {/* Google Sign-In Button */}
+          <div className="mb-5">
+            <a
+              href="/api/auth/google"
+              className="w-full py-2.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2.5 transition-all shadow-xs hover:shadow-sm border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 active:scale-[0.99]"
+              style={{ textDecoration: "none" }}
+            >
+              {/* Google 4-Color Icon */}
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                />
+              </svg>
+              <span>Continue with Google</span>
+            </a>
+
+            {/* Divider */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-2 font-semibold uppercase tracking-wider text-[11px] text-slate-400 bg-white" style={{ background: "var(--bg-card)" }}>
+                  or with email
+                </span>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={submit} className="space-y-3.5">
