@@ -154,12 +154,12 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
           </div>
 
           {/* Vehicle Efficiency & Cost Breakdown */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-extrabold text-sm text-slate-900 tracking-tight">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4 overflow-hidden">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-extrabold text-sm text-slate-900 tracking-tight truncate">
                 Fleet Performance Breakdown
               </h3>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 flex-shrink-0">
                 {data.vehiclesCount} Active {data.vehiclesCount === 1 ? "Vehicle" : "Vehicles"}
               </span>
             </div>
@@ -167,7 +167,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
             {data.vehicleCards.length === 0 ? (
               <p className="text-xs text-slate-500 py-4 text-center">No vehicles in garage.</p>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {sortedVehiclesByEfficiency.map((v) => {
                   const spendPercent =
                     data.totalSpendMinor > 0
@@ -178,34 +178,41 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
                     <Link
                       key={v.id}
                       href={`/app/vehicles/${v.id}`}
-                      className="block p-3.5 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-slate-50/80 transition-all"
+                      className="block p-3 sm:p-3.5 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-slate-50/80 transition-all overflow-hidden"
                       style={{ textDecoration: "none" }}
                     >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-slate-900 truncate">
-                            {v.name}
-                          </span>
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 capitalize">
-                            {v.vehicleType}
-                          </span>
-                          {v.registrationNumber && (
-                            <span className="text-[10px] font-semibold text-slate-400">
-                              {v.registrationNumber}
+                      <div className="flex items-center justify-between gap-2.5 mb-2.5">
+                        {/* Left Info: Name & Badges */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-bold text-sm text-slate-900 truncate max-w-[120px] sm:max-w-[180px]">
+                              {v.name}
                             </span>
-                          )}
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 capitalize flex-shrink-0">
+                              {v.vehicleType}
+                            </span>
+                            {v.registrationNumber && (
+                              <span className="text-[10px] font-semibold text-slate-400 flex-shrink-0">
+                                {v.registrationNumber}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="flex items-center gap-3 text-right">
-                          <span className="text-xs font-bold text-slate-900">
+                        {/* Right Info: Total Spend & Mileage Badge */}
+                        <div className="flex flex-col sm:flex-row sm:items-center items-end gap-1 sm:gap-2.5 text-right flex-shrink-0">
+                          <span className="text-xs sm:text-sm font-black text-slate-900">
                             {inr(v.totalSpendMinor)}
                           </span>
                           {v.averageKmpl != null ? (
-                            <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                              ⚡ {v.averageKmpl.toFixed(1)} km/L
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 whitespace-nowrap">
+                              <span>⚡</span>
+                              <span>{v.averageKmpl.toFixed(1)} km/L</span>
                             </span>
                           ) : (
-                            <span className="text-xs text-slate-400">No mileage data</span>
+                            <span className="text-[10px] text-slate-400 whitespace-nowrap">
+                              No mileage
+                            </span>
                           )}
                         </div>
                       </div>
@@ -217,7 +224,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
                           style={{ width: `${Math.max(spendPercent, 4)}%` }}
                         />
                       </div>
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mt-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-400 mt-1.5 gap-1 flex-wrap">
                         <span>{v.fillCount} fill{v.fillCount === 1 ? "" : "s"} logged</span>
                         <span>{spendPercent}% of garage fuel spend</span>
                       </div>
@@ -229,7 +236,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
           </div>
 
           {/* Recent Garage Fuel Activity */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4 overflow-hidden">
             <h3 className="font-extrabold text-sm text-slate-900 tracking-tight">
               Recent Garage Activity
             </h3>
@@ -251,25 +258,25 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
                     <Link
                       key={act.id}
                       href={`/app/vehicles/${act.vehicleId}`}
-                      className="py-3 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors rounded-lg px-2"
+                      className="py-3 flex items-center justify-between gap-2.5 hover:bg-slate-50 transition-colors rounded-lg px-2 overflow-hidden"
                       style={{ textDecoration: "none" }}
                     >
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <p className="font-bold text-xs sm:text-sm text-slate-900 truncate">
                             {act.vehicleName}
                           </p>
-                          <span className="text-[10px] text-slate-400">
+                          <span className="text-[10px] text-slate-400 flex-shrink-0">
                             {dateStr}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 mt-0.5">
+                        <p className="text-xs text-slate-500 mt-0.5 truncate">
                           {act.odometerKm != null ? `${km(act.odometerKm)} • ` : ""}
                           {act.fuelMl != null ? litres(act.fuelMl) : ""}
                         </p>
                       </div>
 
-                      <div className="text-right flex-shrink-0">
+                      <div className="text-right flex-shrink-0 flex flex-col items-end">
                         <p className="font-black text-sm sm:text-base text-slate-900">
                           {act.totalAmountMinor != null ? inr(act.totalAmountMinor) : "₹0"}
                         </p>
