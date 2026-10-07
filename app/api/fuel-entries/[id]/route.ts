@@ -85,7 +85,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const after = existingOthers.filter((e) => +e.entryAt > +entryAt && e.odometerKm != null);
 
   if (odometerKm != null && !odometerReset) {
-    const prevKm = before.length ? (before[before.length - 1].odometerKm as number) : vehicle.initialOdometerKm;
+    const prevKm = before.length ? (before[before.length - 1].odometerKm as number) : (vehicle.initialOdometerKm ?? 0);
     if (odometerKm < prevKm) return fail(`Odometer must be at least ${km(prevKm)} (your previous reading). If the odometer was reset, use "Odometer was reset".`);
     if (after.length && odometerKm > (after[0].odometerKm as number)) return fail(`A later entry is at ${km(after[0].odometerKm)}, so this must be ${km(after[0].odometerKm)} or less.`);
   }
@@ -95,6 +95,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     fullTank: b.fullTank !== undefined ? b.fullTank !== false : existingDoc.fullTank,
     missedPreviousFill: b.missedPreviousFill !== undefined ? b.missedPreviousFill === true : existingDoc.missedPreviousFill,
     notes: typeof b.notes === "string" ? b.notes.slice(0, 500) : (existingDoc.notes ?? ""),
+    kind: "refill",
     updatedAt: new Date(),
   };
 

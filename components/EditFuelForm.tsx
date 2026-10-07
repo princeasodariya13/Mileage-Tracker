@@ -62,8 +62,32 @@ export default function EditFuelForm({
   const lit = Number(litres);
   const prc = Number(pricePerLitre);
 
-  const calcPricePerL = tot > 0 && lit > 0 ? (tot / lit).toFixed(2) : null;
-  const calcLitres = tot > 0 && prc > 0 ? (tot / prc).toFixed(2) : null;
+  const handleTotalChange = (val: string) => {
+    setTotalAmount(val);
+    const numTotal = Number(val);
+    const effectivePrice = Number(pricePerLitre) > 0 ? Number(pricePerLitre) : 102;
+    if (numTotal > 0 && effectivePrice > 0) {
+      setLitres((numTotal / effectivePrice).toFixed(2));
+    }
+  };
+
+  const handlePriceChange = (val: string) => {
+    setPricePerLitre(val);
+    const numTotal = Number(totalAmount);
+    const effectivePrice = Number(val) > 0 ? Number(val) : 102;
+    if (numTotal > 0 && effectivePrice > 0) {
+      setLitres((numTotal / effectivePrice).toFixed(2));
+    }
+  };
+
+  const handleLitresChange = (val: string) => {
+    setLitres(val);
+    const numTotal = Number(totalAmount);
+    const numLitres = Number(val);
+    if (numTotal > 0 && numLitres > 0) {
+      setPricePerLitre((numTotal / numLitres).toFixed(2));
+    }
+  };
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -75,13 +99,20 @@ export default function EditFuelForm({
     setBusy(true);
     setError("");
 
+    const calculatedLitres =
+      litres && Number(litres) > 0
+        ? litres
+        : (tot > 0 && (Number(pricePerLitre) || 102) > 0
+            ? (tot / (Number(pricePerLitre) || 102)).toFixed(2)
+            : "");
+
     const { ok, data } = await post(
       `/api/fuel-entries/${entry.id}`,
       {
         entryAt: new Date(entryAt).toISOString(),
         totalAmount: totalAmount,
         odometerKm: odometer ? Number(odometer) : null,
-        litres: litres ? litres : (calcLitres ?? ""),
+        litres: calculatedLitres,
         pricePerLitre: pricePerLitre,
         fullTank,
         notes,
@@ -92,8 +123,7 @@ export default function EditFuelForm({
     );
 
     if (ok) {
-      router.push(`/app/vehicles/${vehicleId}`);
-      router.refresh();
+      window.location.href = `/app/vehicles/${vehicleId}`;
     } else {
       setBusy(false);
       setError(data?.error || "Something went wrong.");
@@ -150,7 +180,7 @@ export default function EditFuelForm({
               className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-xl font-bold text-slate-900 placeholder-slate-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
               placeholder="e.g. 500"
               value={totalAmount}
-              onChange={(e) => setTotalAmount(e.target.value)}
+              onChange={(e) => handleTotalChange(e.target.value)}
             />
           </div>
 
@@ -160,7 +190,7 @@ export default function EditFuelForm({
               <button
                 key={amt}
                 type="button"
-                onClick={() => setTotalAmount(amt.toString())}
+                onClick={() => handleTotalChange(amt.toString())}
                 className="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors whitespace-nowrap"
               >
                 ₹{amt}
@@ -238,7 +268,7 @@ export default function EditFuelForm({
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
                   placeholder="e.g. 5.2"
                   value={litres}
-                  onChange={(e) => setLitres(e.target.value)}
+                  onChange={(e) => handleLitresChange(e.target.value)}
                 />
               </div>
             </div>
@@ -260,7 +290,7 @@ export default function EditFuelForm({
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
                 placeholder="e.g. 105 (leave empty to use default ₹102/L)"
                 value={pricePerLitre}
-                onChange={(e) => setPricePerLitre(e.target.value)}
+                onChange={(e) => handlePriceChange(e.target.value)}
               />
               <p className="text-[11px] text-slate-500 mt-1">
                 {tot > 0
