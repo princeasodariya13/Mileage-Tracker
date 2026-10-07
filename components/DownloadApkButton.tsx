@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 export default function DownloadApkButton() {
@@ -99,13 +100,13 @@ export default function DownloadApkButton() {
       </button>
 
       {/* Instructions Modal for browsers without direct prompt */}
-      {showInstructions && (
+      {mounted && showInstructions && typeof document !== "undefined" && createPortal(
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in"
+          className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in text-slate-900"
           onClick={() => setShowInstructions(false)}
         >
           <div
-            className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 text-slate-900 space-y-4"
+            className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 text-slate-900 space-y-4 relative z-10 animate-scale-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3">
@@ -136,12 +137,13 @@ export default function DownloadApkButton() {
             <button
               type="button"
               onClick={() => setShowInstructions(false)}
-              className="w-full py-2.5 rounded-xl font-bold text-xs bg-[#0052cc] hover:bg-blue-700 text-white transition-colors cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-[#0052cc] hover:bg-blue-700 text-white transition-colors cursor-pointer shadow-md active:scale-98"
             >
               Got it
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
