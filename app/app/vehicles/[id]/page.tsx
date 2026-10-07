@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db, oid } from "@/lib/db";
@@ -7,7 +6,7 @@ import { toEntry } from "@/lib/entries";
 import { inr, km } from "@/lib/format";
 import Shell from "@/components/Shell";
 import SimpleFuelLedger, { LedgerEntry } from "@/components/SimpleFuelLedger";
-import CheckMileageModal from "@/components/CheckMileageModal";
+import VehicleHeaderCard from "@/components/VehicleHeaderCard";
 
 export default async function Dashboard({ params }: { params: { id: string } }) {
   const user = await requireUser();
@@ -47,72 +46,23 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
   return (
     <Shell userId={user._id} currentId={params.id}>
       <div className="max-w-4xl mx-auto px-2 sm:px-4 py-2 sm:py-4 pb-24 space-y-5">
-        {/* Vehicle Identity & Top Actions Header */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#0052cc] flex items-center justify-center font-black text-base flex-shrink-0 border border-blue-100">
-              {v.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
-                  {v.name}
-                </h1>
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 capitalize border border-slate-200">
-                  {v.vehicleType || "Vehicle"}
-                </span>
-                {v.registrationNumber && (
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0052cc] border border-blue-200 tracking-wider">
-                    {v.registrationNumber}
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-slate-500 mt-1">
-                {entries.length} fuel fill{entries.length === 1 ? "" : "s"} logged · {v.fuelType || "Petrol"}
-              </p>
-            </div>
-          </div>
-
-          {/* Action Buttons: Add Fuel & Analytics top row, Check Vehicle Average bottom row */}
-          <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[320px]">
-            <div className="grid grid-cols-2 gap-2 w-full">
-              <Link
-                href={`/app/vehicles/${params.id}/add-fuel`}
-                prefetch={true}
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-sm text-center"
-                style={{ textDecoration: "none" }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-                <span>Add Fuel</span>
-              </Link>
-
-              <Link
-                href={`/app/vehicles/${params.id}/analytics`}
-                prefetch={true}
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors shadow-2xs text-center"
-                style={{ textDecoration: "none" }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                </svg>
-                <span>Analytics</span>
-              </Link>
-            </div>
-
-            <CheckMileageModal
-              vehicleId={params.id}
-              vehicleName={v.name}
-              initialOdometerKm={v.initialOdometerKm || 0}
-              latestLoggedOdometerKm={r.latestOdometerKm}
-              totalFuelLitres={r.totalFuelL}
-              totalSpendMinor={r.totalSpendMinor}
-              avgPricePerLitre={r.avgPricePerLMinor ? r.avgPricePerLMinor / 100 : 100}
-            />
-          </div>
-        </div>
+        {/* Vehicle Identity & Top Actions Header with Long-Press & 3-Dots Edit/Delete */}
+        <VehicleHeaderCard
+          vehicle={{
+            id: v._id.toString(),
+            name: v.name,
+            vehicleType: v.vehicleType || "motorcycle",
+            fuelType: v.fuelType || "petrol",
+            registrationNumber: v.registrationNumber || undefined,
+            tankCapacityL: v.tankCapacityMl ? v.tankCapacityMl / 1000 : null,
+            initialOdometerKm: v.initialOdometerKm || 0,
+          }}
+          entriesCount={entries.length}
+          latestOdometerKm={r.latestOdometerKm}
+          totalFuelL={r.totalFuelL}
+          totalSpendMinor={r.totalSpendMinor}
+          avgPricePerLitre={r.avgPricePerLMinor ? r.avgPricePerLMinor / 100 : 102}
+        />
 
         {/* 4-Card Responsive Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

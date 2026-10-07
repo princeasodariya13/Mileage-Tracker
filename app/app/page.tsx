@@ -1,12 +1,11 @@
-import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getVehiclesList } from "@/lib/data";
 import { computeMileage, sortEntries } from "@/lib/mileage";
 import { toEntry } from "@/lib/entries";
-import { inr, km } from "@/lib/format";
 import Shell from "@/components/Shell";
-import VehiclesList, { VehicleCardData } from "@/components/VehiclesList";
+import GarageDashboard, { GarageActivity } from "@/components/GarageDashboard";
+import { VehicleCardData } from "@/components/VehiclesList";
 
 export default async function AppHome() {
   const user = await requireUser();
@@ -19,6 +18,16 @@ export default async function AppHome() {
 
   let overallSpendMinor = 0;
   let overallTrackedKm = 0;
+  let overallFuelMl = 0;
+  let fleetWeightedKm = 0;
+  let fleetWeightedFuelMl = 0;
+
+  const vehicleNameMap = new Map<string, { name: string; type: string }>();
+  for (const v of vehiclesRaw) {
+    vehicleNameMap.set(v._id.toString(), { name: v.name, type: v.vehicleType || "motorcycle" });
+  }
+
+  const allRecentEntries: GarageActivity[] = [];
 
   const vehicleCards: VehicleCardData[] = vehiclesRaw.map((v) => {
     const vEntriesRaw = fuelEntriesRaw.filter((e) => e.vehicleId.toString() === v._id.toString());
@@ -28,13 +37,46 @@ export default async function AppHome() {
     overallSpendMinor += r.totalSpendMinor;
     overallTrackedKm += r.trackedKm;
 
+    for (const e of vEntries) {
+      if (e.fuelMl) overallFuelMl += e.fuelMl;
+    }
+
+    if (r.averageKmpl != null && r.includedCount > 0) {
+      for (const seg of r.segments) {
+        if (seg.included) {
+          fleetWeightedKm += seg.distanceKm;
+          fleetWeightedFuelMl += seg.fuelMl;
+        }
+      }
+    }
+
     const lastEntry = vEntries.length ? vEntries[vEntries.length - 1] : null;
+
+    // Collect recent activity
+    const segByEnd = new Map(r.segments.map((s) => [s.endId, s]));
+    for (const e of vEntries) {
+      const s = segByEnd.get(e.id);
+      allRecentEntries.push({
+        id: e.id,
+        vehicleId: v._id.toString(),
+        vehicleName: v.name,
+        vehicleType: v.vehicleType || "vehicle",
+        entryAt: e.entryAt.toISOString(),
+        totalAmountMinor: e.totalAmountMinor,
+        fuelMl: e.fuelMl,
+        odometerKm: e.odometerKm,
+        mileage: s?.mileage ?? null,
+      });
+    }
 
     return {
       id: v._id.toString(),
       name: v.name,
       vehicleType: v.vehicleType || "motorcycle",
+      fuelType: v.fuelType || "petrol",
       registrationNumber: v.registrationNumber || undefined,
+      tankCapacityL: v.tankCapacityMl ? v.tankCapacityMl / 1000 : null,
+      initialOdometerKm: v.initialOdometerKm || 0,
       fillCount: vEntries.length,
       totalSpendMinor: r.totalSpendMinor,
       averageKmpl: r.averageKmpl,
@@ -43,47 +85,30 @@ export default async function AppHome() {
     };
   });
 
+  // Sort recent entries by date descending, limit to 10
+  allRecentEntries.sort((a, b) => new Date(b.entryAt).getTime() - new Date(a.entryAt).getTime());
+  const recentActivity = allRecentEntries.slice(0, 10);
+
+  const fleetAverageKmpl =
+    fleetWeightedKm > 0 && fleetWeightedFuelMl > 0
+      ? fleetWeightedKm / (fleetWeightedFuelMl / 1000)
+      : null;
+
   return (
     <Shell userId={user._id}>
-      <div className="max-w-2xl mx-auto pb-24">
-        {/* Top Navigation Tabs */}
-        <div className="flex items-center gap-8 border-b border-slate-200 mb-4 px-1">
-          <button className="text-sm font-bold pb-2.5 border-b-2 border-blue-600 text-blue-600">
-            VEHICLES ({vehiclesRaw.length})
-          </button>
-          <span className="text-sm font-semibold pb-2.5 text-slate-400 cursor-default">
-            GARAGE OVERVIEW
-          </span>
-        </div>
-
-        {/* Dual Summary Card (Clean White Surface) */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs mb-4 overflow-hidden">
-          <div className="grid grid-cols-2 divide-x divide-slate-100 p-4 sm:p-5">
-            {/* Left: Total Spent */}
-            <div className="text-center">
-              <span className="text-xs font-semibold text-slate-500">
-                Total fuel spent
-              </span>
-              <p className="text-2xl font-black mt-1 text-emerald-600">
-                {inr(overallSpendMinor)}
-              </p>
-            </div>
-
-            {/* Right: Total Tracked */}
-            <div className="text-center">
-              <span className="text-xs font-semibold text-slate-500">
-                Total tracked
-              </span>
-              <p className="text-2xl font-black mt-1 text-blue-600">
-                {vehiclesRaw.length} {vehiclesRaw.length === 1 ? "Vehicle" : "Vehicles"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Vehicles List */}
-        <VehiclesList vehicles={vehicleCards} />
-      </div>
+      <GarageDashboard
+        data={{
+          totalSpendMinor: overallSpendMinor,
+          totalTrackedKm: overallTrackedKm,
+          totalFuelLitres: overallFuelMl / 1000,
+          fleetAverageKmpl,
+          vehiclesCount: vehiclesRaw.length,
+          totalFillsCount: fuelEntriesRaw.length,
+          vehicleCards,
+          recentActivity,
+        }}
+      />
     </Shell>
   );
 }
+

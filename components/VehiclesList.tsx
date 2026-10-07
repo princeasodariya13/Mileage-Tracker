@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { inr, km } from "@/lib/format";
+import VehicleActionsModal, { VehicleData } from "./VehicleActionsModal";
 
 export type VehicleCardData = {
   id: string;
   name: string;
   vehicleType: string;
+  fuelType?: string;
   registrationNumber?: string;
+  tankCapacityL?: number | null;
+  initialOdometerKm?: number;
   fillCount: number;
   totalSpendMinor: number;
   averageKmpl: number | null;
@@ -45,8 +49,130 @@ function getInitials(name: string): string {
   return name.slice(0, 2).toUpperCase();
 }
 
+function VehicleRowItem({
+  vehicle,
+  onOpenActions,
+}: {
+  vehicle: VehicleCardData;
+  onOpenActions: (v: VehicleCardData) => void;
+}) {
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const isLongPressRef = useRef(false);
+
+  function startPress() {
+    isLongPressRef.current = false;
+    timerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      onOpenActions(vehicle);
+    }, 500);
+  }
+
+  function endPress() {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }
+
+  const initials = getInitials(vehicle.name);
+  const subtitleParts: string[] = [];
+  if (vehicle.registrationNumber) subtitleParts.push(vehicle.registrationNumber);
+  subtitleParts.push(`${vehicle.fillCount} fill${vehicle.fillCount === 1 ? "" : "s"}`);
+  subtitleParts.push(timeAgo(vehicle.lastFillDate));
+
+  return (
+    <div
+      onMouseDown={startPress}
+      onMouseUp={endPress}
+      onMouseLeave={endPress}
+      onTouchStart={startPress}
+      onTouchEnd={endPress}
+      onTouchMove={endPress}
+      className="p-4 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors select-none group"
+    >
+      <Link
+        href={`/app/vehicles/${vehicle.id}`}
+        prefetch={true}
+        onClick={(e) => {
+          if (isLongPressRef.current) {
+            e.preventDefault();
+          }
+        }}
+        className="flex items-center gap-3.5 min-w-0 flex-1"
+        style={{ textDecoration: "none" }}
+      >
+        <div className="w-11 h-11 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 font-extrabold text-xs border border-slate-200">
+          {initials}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <p className="font-bold text-sm text-slate-900 truncate">
+              {vehicle.name}
+            </p>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 capitalize">
+              {vehicle.vehicleType}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-0.5 truncate">
+            {subtitleParts.join(" • ")}
+          </p>
+        </div>
+      </Link>
+
+      <div className="flex items-center gap-2.5 text-right flex-shrink-0">
+        <Link
+          href={`/app/vehicles/${vehicle.id}`}
+          prefetch={true}
+          onClick={(e) => {
+            if (isLongPressRef.current) {
+              e.preventDefault();
+            }
+          }}
+          className="flex flex-col items-end"
+          style={{ textDecoration: "none" }}
+        >
+          <span className="font-black text-base text-slate-900">
+            {inr(vehicle.totalSpendMinor)}
+          </span>
+          {vehicle.averageKmpl != null ? (
+            <span className="text-xs font-bold text-emerald-600 mt-0.5">
+              ⚡ {vehicle.averageKmpl.toFixed(1)} km/L
+            </span>
+          ) : (
+            <span className="text-xs text-slate-400">
+              {vehicle.lastOdometerKm != null ? km(vehicle.lastOdometerKm) : "0 km"}
+            </span>
+          )}
+        </Link>
+
+        {/* 3-dots trigger button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenActions(vehicle);
+          }}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+          title="Vehicle Options (Edit / Delete)"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="12" cy="5" r="1" />
+            <circle cx="12" cy="19" r="1" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function VehiclesList({ vehicles }: VehiclesListProps) {
   const [search, setSearch] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleData | null>(null);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return vehicles;
@@ -115,67 +241,33 @@ export default function VehiclesList({ vehicles }: VehiclesListProps) {
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs divide-y divide-slate-100">
-          {filtered.map((v) => {
-            const initials = getInitials(v.name);
-            const subtitleParts: string[] = [];
-            if (v.registrationNumber) subtitleParts.push(v.registrationNumber);
-            subtitleParts.push(`${v.fillCount} fill${v.fillCount === 1 ? "" : "s"}`);
-            subtitleParts.push(timeAgo(v.lastFillDate));
-
-            return (
-              <Link
-                key={v.id}
-                href={`/app/vehicles/${v.id}`}
-                prefetch={true}
-                className="p-4 flex items-center justify-between gap-3 hover:bg-slate-50 transition-colors block"
-                style={{ textDecoration: "none" }}
-              >
-                {/* Left: Avatar + Title & Meta */}
-                <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                  <div className="w-11 h-11 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 font-extrabold text-xs border border-slate-200">
-                    {initials}
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-bold text-sm text-slate-900 truncate">
-                        {v.name}
-                      </p>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 capitalize">
-                        {v.vehicleType}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-0.5 truncate">
-                      {subtitleParts.join(" • ")}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: Total Spend & Mileage */}
-                <div className="flex items-center gap-3 text-right flex-shrink-0">
-                  <div className="flex flex-col items-end">
-                    <span className="font-black text-base text-slate-900">
-                      {inr(v.totalSpendMinor)}
-                    </span>
-                    {v.averageKmpl != null ? (
-                      <span className="text-xs font-bold text-emerald-600 mt-0.5">
-                        ⚡ {v.averageKmpl.toFixed(1)} km/L
-                      </span>
-                    ) : (
-                      <span className="text-xs text-slate-400">
-                        {v.lastOdometerKm != null ? km(v.lastOdometerKm) : "0 km"}
-                      </span>
-                    )}
-                  </div>
-
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-slate-300">
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </div>
-              </Link>
-            );
-          })}
+          {filtered.map((v) => (
+            <VehicleRowItem
+              key={v.id}
+              vehicle={v}
+              onOpenActions={(veh) =>
+                setSelectedVehicle({
+                  id: veh.id,
+                  name: veh.name,
+                  vehicleType: veh.vehicleType,
+                  fuelType: veh.fuelType || "petrol",
+                  registrationNumber: veh.registrationNumber,
+                  tankCapacityL: veh.tankCapacityL,
+                  initialOdometerKm: veh.initialOdometerKm,
+                })
+              }
+            />
+          ))}
         </div>
+      )}
+
+      {selectedVehicle && (
+        <VehicleActionsModal
+          vehicle={selectedVehicle}
+          isOpen={Boolean(selectedVehicle)}
+          onClose={() => setSelectedVehicle(null)}
+          onUpdated={() => window.location.reload()}
+        />
       )}
 
       {/* Floating Action Button */}
