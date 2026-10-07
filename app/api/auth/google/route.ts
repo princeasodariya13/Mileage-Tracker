@@ -13,8 +13,14 @@ export async function GET(req: Request) {
 
   const h = headers();
   const host = h.get("x-forwarded-host") || h.get("host") || "localhost:3000";
-  const proto = h.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `${proto}://${host}`)).replace(/\/+$/, "");
+  const proto = h.get("x-forwarded-proto") || (host.includes("localhost") || host.includes("127.0.0.1") ? "http" : "https");
+  
+  // When running locally on localhost, always use local URL; in production use env/live host
+  const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
+  const baseUrl = isLocal
+    ? `http://${host}`
+    : (process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `${proto}://${host}`)).replace(/\/+$/, "");
+  
   const redirectUri = `${baseUrl}/api/auth/google/callback`;
 
   const state = randomBytes(16).toString("hex");
