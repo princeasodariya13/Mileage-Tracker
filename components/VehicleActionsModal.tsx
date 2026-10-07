@@ -337,35 +337,58 @@ export default function VehicleActionsModal({
 
         {/* 3. Delete Vehicle Confirmation Mode */}
         {mode === "delete" && (
-          <div className="space-y-4 pt-1">
-            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs leading-relaxed space-y-2">
-              <p className="font-bold text-sm text-rose-800 flex items-center gap-1.5">
-                <span>⚠️ Warning</span>
+          <div className="space-y-4 pt-1 animate-fade-in">
+            {/* Warning Box */}
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-950 space-y-2">
+              <div className="flex items-center gap-2 text-rose-700">
+                <div className="w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                  </svg>
+                </div>
+                <h4 className="font-extrabold text-sm text-rose-900">
+                  Confirm Vehicle Deletion
+                </h4>
+              </div>
+
+              <p className="text-xs font-semibold text-rose-900 pt-1">
+                Are you sure you want to permanently delete <span className="font-black underline">{vehicle.name}</span>?
               </p>
-              <p>
-                Are you sure you want to permanently delete <strong>{vehicle.name}</strong>?
-              </p>
-              <p className="text-rose-700">
-                All associated fuel fills, spending records, and mileage history for this vehicle will be deleted permanently.
+              <p className="text-xs text-rose-700/90 leading-relaxed">
+                All associated fuel fills, spending records, and mileage calculations for this vehicle will be permanently erased. This cannot be undone.
               </p>
             </div>
 
+            {/* Action Buttons */}
             <div className="flex gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setMode("menu")}
                 disabled={busy}
-                className="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="flex-1 py-3 px-3 rounded-xl font-bold text-xs border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
               >
-                Cancel
+                No, Keep Vehicle
               </button>
               <button
                 type="button"
                 onClick={handleDeleteVehicle}
                 disabled={busy}
-                className="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs bg-rose-600 hover:bg-rose-700 text-white transition-colors shadow-xs"
+                className="flex-1 py-3 px-3 rounded-xl font-bold text-xs bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                {busy ? "Deleting Vehicle..." : "Yes, Delete Vehicle"}
+                {busy ? (
+                  "Deleting..."
+                ) : (
+                  <>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                    </svg>
+                    <span>Yes, Delete Vehicle</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
