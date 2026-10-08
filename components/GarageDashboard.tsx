@@ -40,7 +40,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
   }, [data.vehicleCards]);
 
   return (
-    <div className="max-w-3xl mx-auto pb-24 space-y-4">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 pb-24 space-y-4">
       {/* Top Navigation Tab Bar */}
       <div className="flex items-center gap-6 border-b border-slate-200 px-1">
         <button
@@ -105,7 +105,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
                 Total Spend
               </span>
-              <p className="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+              <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-1">
                 {inr(data.totalSpendMinor)}
               </p>
               <p className="text-[11px] text-slate-400 mt-1">
@@ -201,7 +201,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
 
                         {/* Right Info: Total Spend & Mileage Badge */}
                         <div className="flex flex-col sm:flex-row sm:items-center items-end gap-1 sm:gap-2.5 text-right flex-shrink-0">
-                          <span className="text-xs sm:text-sm font-black text-slate-900">
+                          <span className="text-xs sm:text-sm font-black text-emerald-600">
                             {inr(v.totalSpendMinor)}
                           </span>
                           {v.averageKmpl != null ? (
@@ -277,7 +277,7 @@ export default function GarageDashboard({ data }: { data: GarageOverviewData }) 
                       </div>
 
                       <div className="text-right flex-shrink-0 flex flex-col items-end">
-                        <p className="font-black text-sm sm:text-base text-slate-900">
+                        <p className="font-black text-sm sm:text-base text-emerald-600">
                           {act.totalAmountMinor != null ? inr(act.totalAmountMinor) : "₹0"}
                         </p>
                         {act.mileage != null && (

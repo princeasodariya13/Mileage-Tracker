@@ -180,17 +180,6 @@ export default function Header({
             </Link>
           )}
 
-          <Link
-            href="/app/vehicles/new"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-colors"
-            style={{ textDecoration: "none" }}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            <span>New Vehicle</span>
-          </Link>
-
           <button
             onClick={() => setShowLogoutModal(true)}
             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-white/90 hover:bg-white/10 text-xs font-semibold transition-colors cursor-pointer"

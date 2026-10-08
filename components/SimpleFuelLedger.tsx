@@ -212,7 +212,7 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
                         {/* Right: Amount, Mileage & Actions */}
                         <div className="flex items-center gap-4 text-right flex-shrink-0">
                           <div className="flex flex-col items-end">
-                            <span className="font-black text-lg sm:text-xl text-slate-900 tracking-tight">
+                            <span className="font-black text-lg sm:text-xl text-emerald-600 tracking-tight">
                               {e.totalAmountMinor != null ? inr(e.totalAmountMinor) : "₹ 0"}
                             </span>
                             {hasMileage ? (

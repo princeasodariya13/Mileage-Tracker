@@ -135,7 +135,7 @@ function VehicleRowItem({
           className="flex flex-col items-end"
           style={{ textDecoration: "none" }}
         >
-          <span className="font-black text-base text-slate-900">
+          <span className="font-black text-base text-emerald-600">
             {inr(vehicle.totalSpendMinor)}
           </span>
           {vehicle.averageKmpl != null ? (
@@ -274,13 +274,13 @@ export default function VehiclesList({ vehicles }: VehiclesListProps) {
       <div className="fixed bottom-6 right-6 z-40">
         <Link
           href="/app/vehicles/new"
-          className="flex items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-white bg-[#be185d] hover:bg-[#9d174d] shadow-lg transition-transform active:scale-95"
+          className="flex items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-white bg-[#0052cc] hover:bg-blue-700 shadow-md transition-all active:scale-95"
           style={{ textDecoration: "none" }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M12 5v14M5 12h14" />
           </svg>
-          <span>ADD VEHICLE</span>
+          <span>Add Vehicle</span>
         </Link>
       </div>
     </div>
