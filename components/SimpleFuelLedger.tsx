@@ -86,9 +86,9 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
   return (
     <div className="space-y-4">
       {/* Search Input Bar */}
-      <div className="relative">
+      <div className="relative max-w-md">
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
@@ -98,14 +98,16 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
           placeholder="Search fuel fills by note, date, or ₹ amount..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search fuel fills"
           className="w-full pl-10 pr-9 py-2.5 rounded-xl text-sm border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-xs transition-colors"
         />
         {search && (
           <button
             onClick={() => setSearch("")}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+            aria-label="Clear search"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -161,7 +163,7 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
                     return (
                       <div
                         key={e.id}
-                        className="p-4 sm:p-4.5 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                        className="p-4 sm:p-4.5 flex items-center justify-between gap-3 sm:gap-4 hover:bg-slate-50 transition-colors"
                       >
                         {/* Left Details */}
                         <div className="min-w-0 flex-1">
@@ -210,7 +212,7 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
                         </div>
 
                         {/* Right: Amount, Mileage & Actions */}
-                        <div className="flex items-center gap-4 text-right flex-shrink-0">
+                        <div className="flex items-center gap-2.5 sm:gap-3 text-right flex-shrink-0">
                           <div className="flex flex-col items-end">
                             <span className="font-black text-lg sm:text-xl text-emerald-600 tracking-tight">
                               {e.totalAmountMinor != null ? inr(e.totalAmountMinor) : "₹ 0"}
@@ -228,16 +230,17 @@ export default function SimpleFuelLedger({ vehicleId, entries }: SimpleFuelLedge
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-1 pl-1">
+                          <div className="flex items-center gap-0.5 pl-1 sm:pl-2 border-l border-slate-100">
                             {e.isFlagged && (
                               <AcknowledgeButton id={e.id} currentAck={Boolean(e.acknowledged)} />
                             )}
                             <Link
                               href={`/app/vehicles/${vehicleId}/entries/${e.id}/edit`}
-                              className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                              className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                               title="Edit fill"
+                              aria-label="Edit fuel fill"
                             >
-                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                               </svg>

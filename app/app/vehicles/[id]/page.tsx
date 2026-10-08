@@ -70,13 +70,13 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {/* Card 1: Average Mileage */}
           <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold text-slate-600 block truncate">
               Average Mileage
             </span>
             <p className="text-xl sm:text-2xl font-black mt-1 text-[#0052cc]">
               {r.averageKmpl != null ? `${r.averageKmpl.toFixed(1)} km/L` : "—"}
             </p>
-            <span className="text-[11px] text-slate-400 mt-0.5 block truncate">
+            <span className="text-xs text-slate-500 mt-1 block truncate">
               {r.averageKmpl != null
                 ? `${r.includedCount} cycle${r.includedCount === 1 ? "" : "s"} verified`
                 : "Need 1 full tank fill"}
@@ -85,39 +85,39 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
 
           {/* Card 2: Total Spent */}
           <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold text-slate-600 block truncate">
               Total Fuel Spent
             </span>
             <p className="text-xl sm:text-2xl font-black mt-1 text-emerald-600">
               {inr(r.totalSpendMinor)}
             </p>
-            <span className="text-[11px] text-slate-400 mt-0.5 block truncate">
+            <span className="text-xs text-slate-500 mt-1 block truncate">
               {entries.length} fill{entries.length === 1 ? "" : "s"} total
             </span>
           </div>
 
           {/* Card 3: Tracked Distance */}
           <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold text-slate-600 block truncate">
               Tracked Distance
             </span>
             <p className="text-xl sm:text-2xl font-black mt-1 text-slate-900">
               {km(r.trackedKm)}
             </p>
-            <span className="text-[11px] text-slate-400 mt-0.5 block truncate">
+            <span className="text-xs text-slate-500 mt-1 block truncate">
               {r.latestOdometerKm != null ? `Odo: ${km(r.latestOdometerKm)}` : "Since start"}
             </span>
           </div>
 
           {/* Card 4: Total Fuel Bought */}
           <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold text-slate-600 block truncate">
               Fuel Bought
             </span>
             <p className="text-xl sm:text-2xl font-black mt-1 text-slate-900">
               {r.totalFuelL.toFixed(1)} L
             </p>
-            <span className="text-[11px] text-slate-400 mt-0.5 block truncate">
+            <span className="text-xs text-slate-500 mt-1 block truncate">
               {r.costPerKmMinor != null ? `${inr(r.costPerKmMinor)}/km` : "All refills"}
             </span>
           </div>

@@ -102,33 +102,31 @@ export default function VehicleHeaderCard({
         </div>
 
         {/* Right: Actions */}
-        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[320px]">
-          <div className="grid grid-cols-2 gap-2 w-full">
-            <Link
-              href={`/app/vehicles/${vehicle.id}/add-fuel`}
-              prefetch={true}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-sm text-center"
-              style={{ textDecoration: "none" }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              <span>Add Fuel</span>
-            </Link>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <Link
+            href={`/app/vehicles/${vehicle.id}/add-fuel`}
+            prefetch={true}
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-sm text-center flex-1 sm:flex-none"
+            style={{ textDecoration: "none" }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Add Fuel</span>
+          </Link>
 
-            <Link
-              href={`/app/vehicles/${vehicle.id}/analytics`}
-              prefetch={true}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors shadow-2xs text-center"
-              style={{ textDecoration: "none" }}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-              </svg>
-              <span>Analytics</span>
-            </Link>
-          </div>
+          <Link
+            href={`/app/vehicles/${vehicle.id}/analytics`}
+            prefetch={true}
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors shadow-2xs text-center flex-1 sm:flex-none"
+            style={{ textDecoration: "none" }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <span>Analytics</span>
+          </Link>
 
           <CheckMileageModal
             vehicleId={vehicle.id}
@@ -138,6 +136,7 @@ export default function VehicleHeaderCard({
             totalFuelLitres={totalFuelL}
             totalSpendMinor={totalSpendMinor}
             avgPricePerLitre={avgPricePerLitre}
+            className="flex-1 sm:flex-none"
           />
         </div>
       </div>
