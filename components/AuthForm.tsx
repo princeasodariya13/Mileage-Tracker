@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/client";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
@@ -71,7 +70,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         color: "var(--text-primary)",
       }}
     >
-      {/* Top Bar with Theme Toggle */}
+      {/* Top Bar */}
       <div className={`w-full ${isLogin ? "max-w-sm" : "max-w-md"} flex items-center justify-between mb-4`}>
         <Link
           href="/"
@@ -80,7 +79,6 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
         >
           <span>← Back to Home</span>
         </Link>
-        <ThemeToggle />
       </div>
 
       <div className={`w-full ${isLogin ? "max-w-sm" : "max-w-md"} my-auto`}>
@@ -312,7 +310,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
                   tabIndex={-1}
                   title={showPassword ? "Hide password" : "Show password"}
                 >
@@ -368,7 +366,7 @@ export default function AuthForm({ mode }: { mode: "login" | "signup" }) {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
                     tabIndex={-1}
                     title={showConfirmPassword ? "Hide password" : "Show password"}
                   >

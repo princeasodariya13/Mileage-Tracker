@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import ThemeToggle from "@/components/ThemeToggle";
 import DownloadApkButton from "@/components/DownloadApkButton";
 
 export default async function Home() {
@@ -25,7 +24,6 @@ export default async function Home() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           <DownloadApkButton />
-          <ThemeToggle />
           <Link href="/login" className="btn-plain text-xs sm:text-sm px-2.5 sm:px-3.5 py-1.5 sm:py-2">Log in</Link>
           <Link href="/signup" className="btn text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">Get started</Link>
         </div>

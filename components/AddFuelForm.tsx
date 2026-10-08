@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/client";
 
-function localNow() {
+function localToday() {
   const d = new Date();
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 16);
+  return d.toISOString().slice(0, 10);
 }
 
 export default function AddFuelForm({
@@ -20,7 +20,7 @@ export default function AddFuelForm({
 }) {
   const router = useRouter();
   const [totalAmount, setTotalAmount] = useState("");
-  const [entryAt, setEntryAt] = useState(localNow());
+  const [entryAt, setEntryAt] = useState(localToday());
 
   // Optional fields
   const [odometer, setOdometer] = useState("");
@@ -55,8 +55,11 @@ export default function AddFuelForm({
     setBusy(true);
     setError("");
 
+    // Use noon timestamp on the selected date to prevent timezone date shifts
+    const selectedDate = entryAt ? new Date(`${entryAt}T12:00:00`) : new Date();
+
     const { ok, data } = await post(`/api/vehicles/${vehicleId}/fuel-entries`, {
-      entryAt: new Date(entryAt).toISOString(),
+      entryAt: selectedDate.toISOString(),
       totalAmount: totalAmount,
       odometerKm: odometer ? Number(odometer) : null,
       litres: litres ? litres : (calcLitres ?? ""),
@@ -150,15 +153,15 @@ export default function AddFuelForm({
           </div>
         </div>
 
-        {/* Date & Time */}
+        {/* Date */}
         <div>
           <label htmlFor="entryAt" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Date & Time <span className="text-rose-500">*</span>
+            Date <span className="text-rose-500">*</span>
           </label>
           <input
             id="entryAt"
             name="entryAt"
-            type="datetime-local"
+            type="date"
             required
             className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-2xs"
             value={entryAt}
