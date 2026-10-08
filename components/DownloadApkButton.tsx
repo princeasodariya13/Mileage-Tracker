@@ -76,7 +76,7 @@ export default function DownloadApkButton() {
       <button
         type="button"
         onClick={handleInstallClick}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs hover:shadow-sm transform active:scale-95 cursor-pointer"
+        className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl font-semibold text-xs sm:text-sm border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition-all shadow-2xs active:scale-95 cursor-pointer"
         title="Install Mileage-Tracker App on Mobile"
       >
         {/* Android / Download Icon */}

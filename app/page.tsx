@@ -24,8 +24,12 @@ export default async function Home() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           <DownloadApkButton />
-          <Link href="/login" className="btn-plain text-xs sm:text-sm px-2.5 sm:px-3.5 py-1.5 sm:py-2">Log in</Link>
-          <Link href="/signup" className="btn text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">Get started</Link>
+          <Link href="/login" className="inline-flex items-center justify-center px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition-all shadow-2xs">
+            Log in
+          </Link>
+          <Link href="/signup" className="btn text-xs sm:text-sm px-3.5 sm:px-4 py-2 rounded-xl">
+            Get started
+          </Link>
         </div>
       </nav>
 
@@ -57,11 +61,11 @@ export default async function Home() {
             Log every fuel fill. Mileage-Tracker works out your actual km/L — full-tank to full-tank, with partials handled correctly.
           </p>
 
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link href="/signup" className="btn" style={{ fontSize: "1rem", padding: "0.75rem 1.75rem" }}>
+          <div className="flex gap-3.5 justify-center flex-wrap">
+            <Link href="/signup" className="btn px-6 py-3 rounded-xl font-semibold text-base shadow-sm">
               Start tracking free
             </Link>
-            <Link href="/login" className="btn-plain" style={{ fontSize: "1rem", padding: "0.75rem 1.75rem" }}>
+            <Link href="/login" className="btn-plain px-6 py-3 rounded-xl font-semibold text-base border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-2xs">
               Log in
             </Link>
           </div>
