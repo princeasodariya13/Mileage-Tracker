@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db, oid } from "@/lib/db";
+import { getVehiclesList } from "@/lib/data";
 import Shell from "@/components/Shell";
 import AddFuelForm from "@/components/AddFuelForm";
 
@@ -10,9 +11,12 @@ export default async function AddFuel({ params }: { params: { id: string } }) {
   const vid = oid(params.id);
   if (!vid) notFound();
   const d = await db();
-  const v = await d.collection("vehicles").findOne({ _id: vid, userId: user._id });
+  const [v, last] = await Promise.all([
+    d.collection("vehicles").findOne({ _id: vid, userId: user._id }),
+    d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).sort({ entryAt: -1, odometerKm: -1 }).limit(1).toArray(),
+    getVehiclesList(user._id),
+  ]);
   if (!v) notFound();
-  const last = await d.collection("fuelEntries").find({ vehicleId: vid }).sort({ entryAt: -1, odometerKm: -1 }).limit(1).toArray();
 
   return (
     <Shell userId={user._id} currentId={params.id}>

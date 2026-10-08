@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db, oid } from "@/lib/db";
+import { getVehiclesList } from "@/lib/data";
 import { computeMileage, sortEntries } from "@/lib/mileage";
 import { toEntry } from "@/lib/entries";
 import Shell from "@/components/Shell";
@@ -22,6 +23,7 @@ export default async function AnalyticsPage({
   const [v, raw] = await Promise.all([
     d.collection("vehicles").findOne({ _id: vid, userId: user._id }),
     d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray(),
+    getVehiclesList(user._id),
   ]);
   if (!v) notFound();
   const entries = sortEntries(raw.map(toEntry));

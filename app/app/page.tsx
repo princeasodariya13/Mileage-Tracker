@@ -13,7 +13,7 @@ export default async function AppHome() {
 
   const [vehiclesRaw, fuelEntriesRaw] = await Promise.all([
     getVehiclesList(user._id),
-    d.collection("fuelEntries").find({ userId: user._id }).toArray(),
+    d.collection("fuelEntries").find({ userId: user._id }).sort({ entryAt: -1 }).toArray(),
   ]);
 
   let overallSpendMinor = 0;
@@ -22,15 +22,19 @@ export default async function AppHome() {
   let fleetWeightedKm = 0;
   let fleetWeightedFuelMl = 0;
 
-  const vehicleNameMap = new Map<string, { name: string; type: string }>();
-  for (const v of vehiclesRaw) {
-    vehicleNameMap.set(v._id.toString(), { name: v.name, type: v.vehicleType || "motorcycle" });
+  // Group raw entries by vehicleId in single pass O(N)
+  const entriesByVehicle = new Map<string, any[]>();
+  for (const e of fuelEntriesRaw) {
+    const vId = e.vehicleId.toString();
+    const arr = entriesByVehicle.get(vId);
+    if (arr) arr.push(e);
+    else entriesByVehicle.set(vId, [e]);
   }
 
   const allRecentEntries: GarageActivity[] = [];
 
   const vehicleCards: VehicleCardData[] = vehiclesRaw.map((v) => {
-    const vEntriesRaw = fuelEntriesRaw.filter((e) => e.vehicleId.toString() === v._id.toString());
+    const vEntriesRaw = entriesByVehicle.get(v._id.toString()) || [];
     const vEntries = sortEntries(vEntriesRaw.map(toEntry));
     const r = computeMileage(v as any, vEntries);
 

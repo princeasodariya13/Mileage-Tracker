@@ -58,6 +58,7 @@ export default function Header({
             <div className="flex items-center gap-2">
               <Link
                 href="/app"
+                prefetch={true}
                 className="p-1.5 rounded-lg hover:bg-white/10 text-white transition-colors"
                 title="Back to Garage"
               >

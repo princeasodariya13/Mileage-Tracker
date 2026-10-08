@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db, oid } from "@/lib/db";
+import { getVehiclesList } from "@/lib/data";
 import { computeMileage, sortEntries } from "@/lib/mileage";
 import { toEntry } from "@/lib/entries";
 import { inr, km } from "@/lib/format";
@@ -15,7 +16,8 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
   const d = await db();
   const [v, raw] = await Promise.all([
     d.collection("vehicles").findOne({ _id: vid, userId: user._id }),
-    d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).toArray(),
+    d.collection("fuelEntries").find({ vehicleId: vid, userId: user._id }).sort({ entryAt: 1 }).toArray(),
+    getVehiclesList(user._id),
   ]);
   if (!v) notFound();
   const entries = sortEntries(raw.map(toEntry));

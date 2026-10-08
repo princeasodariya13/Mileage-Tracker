@@ -19,10 +19,11 @@ function getClientPromise(): Promise<MongoClient> {
   const uri = process.env.MONGODB_URI as string;
   if (!g._mongoPromise) {
     const client = new MongoClient(uri, {
-      maxPoolSize: 20,
-      minPoolSize: 2,
-      serverSelectionTimeoutMS: 10000,
-      connectTimeoutMS: 10000,
+      maxPoolSize: 30,
+      minPoolSize: 5,
+      maxIdleTimeMS: 60000,
+      serverSelectionTimeoutMS: 8000,
+      connectTimeoutMS: 8000,
     });
     g._mongoPromise = client.connect().catch((err) => {
       g._mongoPromise = undefined; // Reset on failure so subsequent requests retry
@@ -39,9 +40,11 @@ export async function db() {
   if (!g._indexesCreated) {
     g._indexesCreated = true;
     database.collection("users").createIndex({ email: 1 }, { unique: true }).catch(() => {});
+    database.collection("sessions").createIndex({ tokenHash: 1, expiresAt: 1 }).catch(() => {});
+    database.collection("vehicles").createIndex({ userId: 1, createdAt: 1 }).catch(() => {});
+    database.collection("fuelEntries").createIndex({ userId: 1, vehicleId: 1, entryAt: -1 }).catch(() => {});
+    database.collection("fuelEntries").createIndex({ userId: 1, entryAt: -1 }).catch(() => {});
     database.collection("fuelEntries").createIndex({ vehicleId: 1, userId: 1, entryAt: -1 }).catch(() => {});
-    database.collection("vehicles").createIndex({ userId: 1 }).catch(() => {});
-    database.collection("sessions").createIndex({ tokenHash: 1 }).catch(() => {});
   }
 
   return database;
