@@ -119,9 +119,8 @@ export default function Header({
                           href={`/app/vehicles/${v.id}`}
                           prefetch={true}
                           onClick={() => setDropdownOpen(false)}
-                          className={`flex items-center justify-between px-3.5 py-2.5 text-sm hover:bg-slate-50 transition-colors ${
-                            v.id === currentId ? "font-bold text-blue-600 bg-blue-50/70" : "text-slate-700"
-                          }`}
+                          className={`flex items-center justify-between px-3.5 py-2.5 text-sm hover:bg-slate-50 transition-colors ${v.id === currentId ? "font-bold text-blue-600 bg-blue-50/70" : "text-slate-700"
+                            }`}
                         >
                           <span className="truncate">{v.name}</span>
                           {v.id === currentId && (
